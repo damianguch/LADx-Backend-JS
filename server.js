@@ -153,6 +153,6 @@ process.on('SIGINT', async () => {
 // Start the HTTPS server
 const httpServer = http.createServer(app);
 
-httpServer.listen(PORT, () => {
+httpServer.listen(PORT, '0.0.0.0', () => {
   console.log(`HTTPS Server running on port ${PORT}...`);
 });
