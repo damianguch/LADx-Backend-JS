@@ -150,13 +150,9 @@ process.on('SIGINT', async () => {
   }
 });
 
-app.get('/', (req, res) => {
-  res.send('Hello, world! LADx server is running...').end();
-});
-
 // Start the HTTPS server
 const httpServer = http.createServer(app);
 
-httpServer.listen(PORT, '0.0.0.0', () => {
+httpServer.listen(PORT, () => {
   console.log(`HTTPS Server running on port ${PORT}...`);
 });
