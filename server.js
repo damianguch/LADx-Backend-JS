@@ -151,7 +151,7 @@ process.on('SIGINT', async () => {
 });
 
 app.get('/', (req, res) => {
-  res.send('Hello, world! LADx server is running...');
+  res.send('Hello, world! LADx server is running...').end();
 });
 
 // Start the HTTPS server
