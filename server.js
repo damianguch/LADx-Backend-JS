@@ -1,7 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const db = require('./dbconnect/db');
-const https = require('https');
+const http = require('http');
 const path = require('path');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
@@ -151,11 +151,8 @@ process.on('SIGINT', async () => {
 });
 
 // Start the HTTPS server
-const httpsServer = https.createServer(app, (req, res) => {
-  res.writeHead(200);
-  res.setHeader('Content-Type', 'application/javascript');
-});
+const httpServer = http.createServer(app);
 
-httpsServer.listen(PORT, '0.0.0.0', () => {
+httpServer.listen(PORT, '0.0.0.0', () => {
   console.log(`HTTPS Server running on port ${PORT}...`);
 });
