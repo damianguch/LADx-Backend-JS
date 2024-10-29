@@ -2,7 +2,6 @@ require('dotenv').config();
 const express = require('express');
 const db = require('./dbconnect/db');
 const https = require('https');
-const fs = require('fs');
 const path = require('path');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
@@ -140,21 +139,19 @@ if (process.env.NODE_ENV === 'production') {
 
 const PORT = process.env.PORT || 1337;
 
-// Path to SSL key and certificate files
-const privatekey = fs.readFileSync(
-  path.join(__dirname, 'SSL', 'privatekey.pem')
-);
-const certificate = fs.readFileSync(
-  path.join(__dirname, 'SSL', 'certificate.pem')
-);
-
-const credentials = {
-  key: privatekey,
-  cert: certificate
-};
+process.on('SIGINT', async () => {
+  try {
+    await db.close();
+    console.log('Connection to db closed by application termination');
+    process.exit(0);
+  } catch (error) {
+    console.error('Error closing MongoDB connection:', error);
+    process.exit(1);
+  }
+});
 
 // Start the HTTPS server
-const httpsServer = https.createServer(credentials, app, (req, res) => {
+const httpsServer = https.createServer(app, (req, res) => {
   res.writeHead(200);
   res.setHeader('Content-Type', 'application/javascript');
 });
