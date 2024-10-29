@@ -150,6 +150,10 @@ process.on('SIGINT', async () => {
   }
 });
 
+app.get('/', (req, res) => {
+  res.send('Hello, world! LADx server is running...');
+});
+
 // Start the HTTPS server
 const httpServer = http.createServer(app);
 
