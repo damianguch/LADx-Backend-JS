@@ -172,7 +172,7 @@ const verifyOTP = async (req, res) => {
   }
 };
 
-// User Login
+// @POST: User Login
 const Login = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -181,20 +181,22 @@ const Login = async (req, res) => {
 
     if (!email) {
       await createAppLog('Email Required!');
-      return res.status(400).json({
+      res.status(400).json({
         status: 'E00',
         success: false,
         message: 'Email Required!'
       });
+      return;
     }
 
     if (!password) {
       await createAppLog('Password Required!');
-      return res.status(400).json({
+      res.status(400).json({
         status: 'E00',
         success: false,
         message: 'Password Required!'
       });
+      return;
     }
 
     // Verify user login info(Find user by email)
@@ -202,11 +204,12 @@ const Login = async (req, res) => {
 
     if (!user) {
       await createAppLog('This email is not registered');
-      return res.status(401).json({
+      res.status(401).json({
         status: 'E00',
         success: false,
         message: 'This email is not registered'
       });
+      return;
     }
 
     // Compare hashed password
@@ -214,11 +217,12 @@ const Login = async (req, res) => {
 
     if (!isPasswordValid) {
       await createAppLog('Wrong password.');
-      return res.status(400).json({
+      res.status(400).json({
         status: 'E00',
         success: false,
         message: 'Wrong password.'
       });
+      return;
     }
 
     // Generate JWT token with the user payload
@@ -235,7 +239,7 @@ const Login = async (req, res) => {
     await log.save();
 
     // Store token in HTTP-only, secure cookie
-    return res
+    res
       .cookie('token', token, {
         httpOnly: true, // Prevent JavaScript access
         secure: process.env.NODE_ENV === 'production' ? true : false, // Only send cookie over HTTPS in production
@@ -250,7 +254,7 @@ const Login = async (req, res) => {
       });
   } catch (err) {
     await createAppLog('Error: ' + err.message);
-    return res.status(500).json({
+    res.status(500).json({
       status: 'E00',
       success: false,
       message: 'Internal Server error: ' + err.message
